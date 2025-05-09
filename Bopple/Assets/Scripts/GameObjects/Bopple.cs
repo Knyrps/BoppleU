@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Xml.Linq;
 using Bopple.Core.EventHandling;
 using Bopple.Core.Utilities;
 using UnityEngine;
@@ -16,7 +15,7 @@ namespace Scripts.GameObjects
         // Start is called once before the first execution of Update after the MonoBehaviour is created
         void Start()
         {
-            this.instanceId = this.GetInstanceID();
+            this.instanceId = GetInstanceID();
             this.RigidBody.bodyType = RigidbodyType2D.Static;
         }
 
@@ -24,9 +23,9 @@ namespace Scripts.GameObjects
         void Update()
         {
             float maxSpeed = 50f;
-            if (RigidBody.linearVelocity.magnitude > maxSpeed)
+            if (this.RigidBody.linearVelocity.magnitude > maxSpeed)
             {
-                RigidBody.linearVelocity = RigidBody.linearVelocity.normalized * maxSpeed;
+                this.RigidBody.linearVelocity = this.RigidBody.linearVelocity.normalized * maxSpeed;
             }
         }
 

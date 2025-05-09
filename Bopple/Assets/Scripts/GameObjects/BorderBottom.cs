@@ -1,17 +1,19 @@
-using System.Linq;
 using UnityEngine;
 
-public class BorderBottom : MonoBehaviour
+namespace Scripts.GameObjects
 {
-    private void OnTriggerEnter2D(Collider2D actor)
+    public class BorderBottom : MonoBehaviour
     {
-        Bopple bopple = actor.GetComponent<Bopple>();
-        if (bopple == null)
+        private void OnTriggerEnter2D(Collider2D actor)
         {
-            Debug.Log("Not Bopple");
-            return;
-        }
+            Bopple bopple = actor.GetComponent<Bopple>();
+            if (!bopple)
+            {
+                Debug.Log("Not Bopple");
+                return;
+            }
 
-        Destroy(bopple.gameObject);
+            Destroy(bopple.gameObject);
+        }
     }
 }

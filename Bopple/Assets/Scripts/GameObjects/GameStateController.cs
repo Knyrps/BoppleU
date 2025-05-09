@@ -1,21 +1,24 @@
 using UnityEngine;
 
-public class GameStateController : MonoBehaviour
+namespace Scripts.GameObjects
 {
-    [Tooltip("The Playfield Controller")]
-    public GameObject PlayFieldController;
-
-    private PlayFieldController playFieldController;
-
-    void Start()
+    public class GameStateController : MonoBehaviour
     {
-        Initialize();
-    }
+        [Tooltip("The Playfield Controller")]
+        public GameObject PlayFieldController;
 
-    public void Initialize()
-    {
-        this.playFieldController = this.PlayFieldController.GetComponent<PlayFieldController>();
+        private PlayFieldController playFieldController;
 
-        this.playFieldController.InitializeGrid();
+        void Start()
+        {
+            Initialize();
+        }
+
+        public void Initialize()
+        {
+            this.playFieldController = this.PlayFieldController.GetComponent<PlayFieldController>();
+
+            this.playFieldController.TryInitializeGrid();
+        }
     }
 }
