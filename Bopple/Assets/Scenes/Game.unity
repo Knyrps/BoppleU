@@ -1090,7 +1090,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BopplePrefab: {fileID: 4668390775489688879, guid: 28bc133959108384ca36b67dde597090, type: 3}
-  LaunchVelocity: 7
+  LaunchVelocity: 9.19
   AllowUpwardLaunch: 1
   Infinite: 0
   SpawnAnimationDuration: 0.3
@@ -1660,6 +1660,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b90c954b6655c6498dc7e943951beba, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  PlayFieldController: {fileID: 0}
 --- !u!4 &1942870293
 Transform:
   m_ObjectHideFlags: 0

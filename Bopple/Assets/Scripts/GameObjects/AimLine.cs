@@ -14,12 +14,15 @@ namespace Scripts.GameObjects
         [Min(2)] // Resolution should be at least 2 for meaningful output
         public int Resolution = 20;
 
+        [Range(0, 1)]
         [Tooltip("Scale of the first dot along the trajectory. 0 = no scale, 1 = full scale.")]
         public float InitialDotScale = 1f;
 
+        [Range(0, 1)]
         [Tooltip("Scale of the final dots along the trajectory. 0 = no scale, 1 = full scale.")]
         public float FinalDotScale = 0.7f;
 
+        [Range(0, 1)]
         [Tooltip("Opacity of the final dots along the trajectory. 0 = fully transparent, 1 = fully opaque.")]
         public float FinalDotOpacity = 0.4f;
 
@@ -82,8 +85,6 @@ namespace Scripts.GameObjects
         private static Vector2 CalculateProjectilePoint(Vector2 origin, Vector2 initialVelocity,
             float effectiveGravityFactor, float time)
         {
-            // Original physics model: s = v0*t + 0.5*a*t^2, where gravity effect is quadratic.
-            // effectiveGravityFactor is (gravity * 5) from the original code.
             Vector2 gravityDisplacement = new Vector2(0f, effectiveGravityFactor * time * time);
             return origin + (initialVelocity * time) - gravityDisplacement;
         }
@@ -176,7 +177,7 @@ namespace Scripts.GameObjects
 
                 float progress = (float)idx / (this.dots.Count - 1);
 
-                float opacity = this.FinalDotOpacity + (this.InitialDotScale - progress) * (this.InitialDotScale - this.FinalDotOpacity);
+                float opacity = this.FinalDotOpacity + (1 - progress) * (1 - this.FinalDotOpacity);
                 float scale = this.FinalDotScale + (this.InitialDotScale - progress) * (this.InitialDotScale - this.FinalDotScale);
 
                 SpriteRenderer dotRenderer = dot.GetComponent<SpriteRenderer>();
