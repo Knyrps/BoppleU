@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 6369512420419497144}
   - component: {fileID: 5140166334204072359}
   - component: {fileID: -2116411540486171118}
-  - component: {fileID: -3932037962996292717}
+  - component: {fileID: 6368728735536240350}
   m_Layer: 0
-  m_Name: Peg
+  m_Name: StandardPeg
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,7 +153,7 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &-3932037962996292717
+--- !u!114 &6368728735536240350
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,9 +162,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 7671961271974573758}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb9caeba69e98994f80ec3968950671d, type: 3}
+  m_Script: {fileID: 11500000, guid: b06cb82911ea4e64b947af2a2e4356ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  AddBounceForcePercent: 0.35
-  HitsNeeded: 3
-  FinalBounce: 1
+  addBounceForcePercent: 0.6
+  hitsNeeded: 3
+  finalBounce: 1

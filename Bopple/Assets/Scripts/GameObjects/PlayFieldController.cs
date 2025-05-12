@@ -61,6 +61,7 @@ namespace Scripts.GameObjects
             bool[][] pattern = GridLayoutResolver.Resolve(layout);
 
             this.PopulateBoundsFromEnumerable(pattern);
+            this.PrepareGridFromEnumerable(pattern);
 
             this.GenerateGridCells(pattern);
 
@@ -70,6 +71,15 @@ namespace Scripts.GameObjects
         private void PopulateBoundsFromEnumerable<T>(T[][] array)
         {
             this._bounds = (array.Length, array.Max(rows => rows.Length));
+        }
+
+        private void PrepareGridFromEnumerable<T>(T[][] array)
+        {
+            this._grid = new GridCell[array.Length][];
+            for (int i = 0; i < this._grid.Length; i++)
+            {
+                this._grid[i] = new GridCell[array[i].Length];
+            }
         }
 
         private bool PositionInBoundsOfGridOneBased(int x, int y) => this.PositionInBoundsOfGrid(x - 1, y - 1);
@@ -123,6 +133,8 @@ namespace Scripts.GameObjects
                         10f);
 
                     gridCell.UpdatePositionAndSize(cellTransform.position.Value, cellTransform.cellSize.Value);
+
+                    this._grid[iX][iY] = gridCell;
                 }
             }
         }

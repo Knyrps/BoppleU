@@ -1,74 +1,116 @@
 ﻿using System;
-using UnityEditor;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Scripts.Grid
 {
+    /// <summary>
+    ///     Enum containing the different grid layouts.
+    ///     When adding layouts, make sure to add them to the <see cref="GridLayoutResolver" /> class in the
+    ///     <see cref="GridLayoutResolver.Layouts" /> method and the <see cref="GridLayoutResolver.Chances" /> dictionary.
+    ///     Otherwise, they will never be used.
+    /// </summary>
     public enum GridLayout
     {
         /// <summary>
-        /// Randomize the grid layout.
+        ///     Randomize the grid layout.
         /// </summary>
         Random = 0,
+
         /// <summary>
-        /// ⬛ ⬛ ⬛ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬜ ⬛ ⬛ <br />
-        /// ⬛ ⬜ ⬜ ⬜ ⬛ <br />
-        /// ⬛ ⬛ ⬜ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬛ ⬛ ⬛
+        ///     ⬛ ⬛ ⬛ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬜ ⬛ ⬛ <br />
+        ///     ⬛ ⬜ ⬜ ⬜ ⬛ <br />
+        ///     ⬛ ⬛ ⬜ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬛ ⬛ ⬛
         /// </summary>
         Grid5By5WithHole,
+
         /// <summary>
-        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬛ ⬜ ⬛ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬜ ⬜ ⬜ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬛ ⬜ ⬛ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
-        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛
+        ///     ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬛ ⬜ ⬛ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬜ ⬜ ⬜ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬛ ⬜ ⬛ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
+        ///     ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛
         /// </summary>
-        Grid7By7WithHole,
+        Grid7By7WithHole
     }
 
     public static class GridLayoutResolver
     {
+        private static readonly Dictionary<GridLayout, int> Chances = new()
+        {
+            { GridLayout.Grid5By5WithHole, 10 },
+            { GridLayout.Grid7By7WithHole, 10 }
+        };
+
+        private static readonly Dictionary<GridLayout, bool[][]> Layouts = new()
+        {
+            { GridLayout.Grid5By5WithHole, new[] {
+                new[] { true, true, true, true, true },
+                new[] { true, true, false, true, true },
+                new[] { true, false, false, false, true },
+                new[] { true, true, false, true, true },
+                new[] { true, true, true, true, true }
+            }},
+            { GridLayout.Grid7By7WithHole, new[] {
+                new[] { true, true, true, true, true, true, true },
+                new[] { true, true, true, true, true, true, true },
+                new[] { true, true, true, false, true, true, true },
+                new[] { true, true, false, false, false, true, true },
+                new[] { true, true, true, false, true, true, true },
+                new[] { true, true, true, true, true, true, true },
+                new[] { true, true, true, true, true, true, true }
+            }}
+        };
+
         public static bool[][] Resolve(GridLayout layout)
         {
+            UnityEngine.Debug.Assert(
+                DictionariesMatch(),
+                "Layouts and Chances keys must match!"
+            );
+
             if (layout == GridLayout.Random)
             {
                 int layoutAmount = Enum.GetNames(typeof(GridLayout)).Length;
-                if (layoutAmount == 1)
+                if (layoutAmount <= 1)
                 {
                     throw new ArgumentOutOfRangeException(nameof(layout), layout, "No GridLayouts defined");
                 }
 
-                // Range: From 1 (to ignore Random) to the Length of Layouts (null based)
-                int randInt = new Random().Next(1, layoutAmount - 1);
+                double totalWeight = Chances
+                    .Where(d => d.Key != GridLayout.Random)
+                    .Select(d => d.Value)
+                    .Sum();
 
-                layout = (GridLayout)randInt;
+                int roll = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, (int)totalWeight);
+                int cumulative = 0;
+                foreach (KeyValuePair<GridLayout, int> kvp in Chances.Where(kvp => kvp.Key != GridLayout.Random))
+                {
+                    cumulative += kvp.Value;
+                    if (roll < cumulative)
+                    {
+                        layout = kvp.Key;
+                        break;
+                    }
+                }
             }
 
-            return layout switch
+            if (!Layouts.TryGetValue(layout, out bool[][] resolvedLayout))
             {
-                GridLayout.Grid5By5WithHole => new []
-                {
-                    new []{true, true, true, true, true},
-                    new []{true, true, false, true, true},
-                    new []{true, false, false, false, true},
-                    new []{true, true, false, true, true},
-                    new []{true, true, true, true, true},
-                },
-                GridLayout.Grid7By7WithHole => new[]
-                {
-                    new []{true, true, true, true, true, true, true},
-                    new []{true, true, true, true, true, true, true},
-                    new []{true, true, true, false, true, true, true},
-                    new []{true, true, false, false, false, true, true},
-                    new []{true, true, true, false, true, true, true},
-                    new []{true, true, true, true, true, true, true},
-                    new []{true, true, true, true, true, true, true},
-                },
-                _ => throw new ArgumentOutOfRangeException(nameof(layout), layout, null)
-            };
+                throw new ArgumentOutOfRangeException(nameof(layout), layout, "GridLayout not defined");
+            }
+
+            return resolvedLayout;
+        }
+
+        private static bool DictionariesMatch()
+        {
+            return Chances.Keys.Count == Layouts.Keys.Count &&
+                   Chances.Keys.All(key => Layouts.ContainsKey(key));
         }
     }
 }

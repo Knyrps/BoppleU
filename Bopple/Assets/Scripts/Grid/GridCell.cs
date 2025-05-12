@@ -1,4 +1,5 @@
 using System;
+using Scripts.Grid.GridCellContentValidators;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -82,7 +83,7 @@ namespace Scripts.Grid
                 return false;
             }
 
-            foreach (GridCellContentValidator v in content.Validators)
+            foreach (GridCellContentValidatorBase v in content.Validators)
             {
                 if (!v.Validate(cell, content))
                 {
