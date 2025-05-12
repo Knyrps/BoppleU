@@ -282,7 +282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   margins: {x: 0.2, y: 0.2}
-  defaultGridLayout: 2
+  defaultGridLayout: 0
   gridCellPrefab: {fileID: 7930410178736884168, guid: 01a245cc9d145634c87711573351009f, type: 3}
   minGridGap: 0.2
 --- !u!1 &367200213
@@ -618,7 +618,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: -3932037962996292717, guid: 91e341afdfe6b8d4da36834412eb92f3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
