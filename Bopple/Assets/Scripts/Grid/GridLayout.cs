@@ -17,6 +17,16 @@ namespace Scripts.Grid
         /// ⬛ ⬛ ⬛ ⬛ ⬛
         /// </summary>
         Grid5By5WithHole,
+        /// <summary>
+        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
+        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
+        /// ⬛ ⬛ ⬛ ⬜ ⬛ ⬛ ⬛ <br />
+        /// ⬛ ⬛ ⬜ ⬜ ⬜ ⬛ ⬛ <br />
+        /// ⬛ ⬛ ⬛ ⬜ ⬛ ⬛ ⬛ <br />
+        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ <br />
+        /// ⬛ ⬛ ⬛ ⬛ ⬛ ⬛ ⬛
+        /// </summary>
+        Grid7By7WithHole,
     }
 
     public static class GridLayoutResolver
@@ -47,7 +57,16 @@ namespace Scripts.Grid
                     new []{true, true, false, true, true},
                     new []{true, true, true, true, true},
                 },
-                GridLayout.Random => throw new ArgumentOutOfRangeException(nameof(layout), layout, null),
+                GridLayout.Grid7By7WithHole => new[]
+                {
+                    new []{true, true, true, true, true, true, true},
+                    new []{true, true, true, true, true, true, true},
+                    new []{true, true, true, false, true, true, true},
+                    new []{true, true, false, false, false, true, true},
+                    new []{true, true, true, false, true, true, true},
+                    new []{true, true, true, true, true, true, true},
+                    new []{true, true, true, true, true, true, true},
+                },
                 _ => throw new ArgumentOutOfRangeException(nameof(layout), layout, null)
             };
         }
