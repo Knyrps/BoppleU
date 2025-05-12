@@ -4,8 +4,9 @@ namespace Scripts.GameObjects
 {
     public class GameStateController : MonoBehaviour
     {
+        [SerializeField]
         [Tooltip("The Playfield Controller")]
-        public GameObject PlayFieldController;
+        private GameObject PlayFieldController;
 
         private PlayFieldController playFieldController;
 
