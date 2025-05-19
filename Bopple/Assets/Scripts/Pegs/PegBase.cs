@@ -1,3 +1,6 @@
+using Bopple.Core.Utilities;
+using System.Reflection;
+using Scripts.Grid;
 using UnityEngine;
 
 namespace Scripts.Pegs
@@ -15,6 +18,28 @@ namespace Scripts.Pegs
         public abstract string PegShortInfo { get; }
 
         public abstract Sprite PegSprite { get; }
+
+        protected int? _weight;
+
+        public int Weight => this._weight ?? 0;
+
+        protected virtual void Awake()
+        {
+            WeightAttribute attr = this.GetType().GetCustomAttribute<WeightAttribute>();
+            if (attr == null)
+            {
+                LogUtil.LogError($"{this.GetType().Name} is missing [Weight]!");
+            }
+            else
+            {
+                this._weight = attr.Weight;
+            }
+        }
+
+        public virtual bool IsValidForCellInGrid(GridCell[][] grid, Vector2Int cell)
+        {
+            return true;
+        }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {

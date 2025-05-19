@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Bopple.Core.EventHandling;
+using Bopple.Core.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -48,7 +49,7 @@ namespace Scripts.GameObjects
                 {
                     if (TryGetDirectionFromCursor(out float direction))
                     {
-                        Debug.Log("Launch direction: " + direction + "deg");
+                        LogUtil.Log("Launch direction: " + direction + "deg");
                         if (this.stock.Launch(direction, this.LaunchVelocity, this.AllowUpwardLaunch))
                         {
                             this.stock = null;
@@ -61,7 +62,7 @@ namespace Scripts.GameObjects
                         }
                         else
                         {
-                            Debug.Log("Failed to launch Bopple");
+                            LogUtil.Log("Failed to launch Bopple");
                         }
                     }
                     this.aiming = false;
@@ -87,7 +88,7 @@ namespace Scripts.GameObjects
         {
             if (this.stocked || this.stock != null)
             {
-                Debug.Log("Already stocked");
+                LogUtil.Log("Already stocked");
                 return;
             }
 

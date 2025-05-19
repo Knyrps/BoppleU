@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Bopple.Core.Utilities;
 
 namespace Scripts.Grid
 {
@@ -81,22 +82,10 @@ namespace Scripts.Grid
                     throw new ArgumentOutOfRangeException(nameof(layout), layout, "No GridLayouts defined");
                 }
 
-                double totalWeight = Chances
-                    .Where(d => d.Key != GridLayout.Random)
-                    .Select(d => d.Value)
-                    .Sum();
-
-                int roll = System.Security.Cryptography.RandomNumberGenerator.GetInt32(0, (int)totalWeight);
-                int cumulative = 0;
-                foreach (KeyValuePair<GridLayout, int> kvp in Chances.Where(kvp => kvp.Key != GridLayout.Random))
-                {
-                    cumulative += kvp.Value;
-                    if (roll < cumulative)
-                    {
-                        layout = kvp.Key;
-                        break;
-                    }
-                }
+                layout = RandomUtil.GetRandomElementWeighted<KeyValuePair<GridLayout, int>>(
+                    Chances.Where(kvp => kvp.Key != GridLayout.Random).ToList(),
+                    Chances.Where(kvp => kvp.Key != GridLayout.Random).Select(kvp => (float)kvp.Value).ToList()
+                ).Key;
             }
 
             if (!Layouts.TryGetValue(layout, out bool[][] resolvedLayout))

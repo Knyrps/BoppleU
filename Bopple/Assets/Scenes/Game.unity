@@ -285,6 +285,8 @@ MonoBehaviour:
   defaultGridLayout: 0
   gridCellPrefab: {fileID: 7930410178736884168, guid: 01a245cc9d145634c87711573351009f, type: 3}
   minGridGap: 0.2
+  pegTypes:
+  - {fileID: 6368728735536240350, guid: 91e341afdfe6b8d4da36834412eb92f3, type: 3}
 --- !u!1 &367200213
 GameObject:
   m_ObjectHideFlags: 0

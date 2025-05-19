@@ -1,11 +1,11 @@
-using Bopple.Core.Enums;
+using System;
 
-namespace Bopple.Core.Models
+namespace Scripts.Rounds
 {
     public class Round
     {
         public int RoundNumber { get; set; }
-        
+
         public RoundType RoundType { get; set; }
 
         public bool IsSpecialRound => this.RoundType != RoundType.Normal;
@@ -14,7 +14,15 @@ namespace Bopple.Core.Models
 
         public void Step()
         {
-            
+            this.RoundNumber++;
+            this.OnStartRound(this.RoundNumber);
+        }
+
+        public event Action<int> StartRound;
+
+        private void OnStartRound(int number)
+        {
+            this.StartRound?.Invoke(number);
         }
     }
 }

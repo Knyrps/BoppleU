@@ -1,4 +1,4 @@
-namespace Bopple.Core.Enums
+namespace Scripts.Rounds
 {
     public enum RoundType
     {

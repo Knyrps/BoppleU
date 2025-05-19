@@ -1,3 +1,4 @@
+using Bopple.Core.Utilities;
 using UnityEngine;
 
 namespace Scripts.GameObjects
@@ -9,7 +10,7 @@ namespace Scripts.GameObjects
             Bopple bopple = actor.GetComponent<Bopple>();
             if (!bopple)
             {
-                Debug.Log("Not Bopple");
+                LogUtil.Log("Not Bopple");
                 return;
             }
 

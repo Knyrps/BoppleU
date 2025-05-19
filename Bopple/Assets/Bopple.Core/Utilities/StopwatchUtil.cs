@@ -24,7 +24,7 @@ namespace Bopple.Core.Utilities
                 return sw;
             }
 
-            Debug.LogWarning($"No stopwatch found for identifier: {identifier}");
+            LogUtil.LogWarning($"No stopwatch found for identifier: {identifier}");
             return null;
         }
 
@@ -36,7 +36,7 @@ namespace Bopple.Core.Utilities
                 return;
             }
 
-            Debug.LogWarning($"No stopwatch found for identifier: {identifier}");
+            LogUtil.LogWarning($"No stopwatch found for identifier: {identifier}");
         }
 
         public static long Elapsed(string identifier)
@@ -46,7 +46,7 @@ namespace Bopple.Core.Utilities
                 return sw.ElapsedMilliseconds;
             }
 
-            Debug.LogWarning($"No stopwatch found for identifier: {identifier}");
+            LogUtil.LogWarning($"No stopwatch found for identifier: {identifier}");
             return -1;
         }
 
@@ -59,7 +59,7 @@ namespace Bopple.Core.Utilities
                 return sw.ElapsedMilliseconds;
             }
 
-            Debug.LogWarning($"No stopwatch found for identifier: {identifier}");
+            LogUtil.LogWarning($"No stopwatch found for identifier: {identifier}");
             return -1;
         }
     }

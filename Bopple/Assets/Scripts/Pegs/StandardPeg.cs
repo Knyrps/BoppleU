@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace Scripts.Pegs
 {
+    [Weight(80)]
     public class StandardPeg : PegBase
     {
         public override string PegName => nameof(StandardPeg).PascalToReadable();

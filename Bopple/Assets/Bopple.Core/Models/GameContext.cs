@@ -1,3 +1,5 @@
+using Scripts.Rounds;
+
 namespace Bopple.Core.Models
 {
     public class GameContext
@@ -13,6 +15,11 @@ namespace Bopple.Core.Models
 
         public void Initialize()
         {
+            this.CurrentRound = new Round
+            {
+                RoundNumber = 0,
+                RoundType = RoundType.Normal
+            };
             this.Initialized = true;
         }
 

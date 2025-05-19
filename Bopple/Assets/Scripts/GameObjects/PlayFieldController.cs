@@ -1,6 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using Bopple.Core;
+using Bopple.Core.Models;
+using Bopple.Core.Utilities;
 using Scripts.Grid;
+using Scripts.Pegs;
 using UnityEngine;
 using GridLayout = Scripts.Grid.GridLayout;
 
@@ -9,9 +14,24 @@ namespace Scripts.GameObjects
     /// <summary>
     /// Since this is a controller exclusive to the Game Scene, it will be destroyed on load.
     /// </summary>
+    [Debug]
     public class PlayFieldController : MonoBehaviour
     {
+        #region Private fields and properties
+
         private GridCell[][] _grid;
+
+        private (int x, int y) _bounds;
+
+        private Vector2 _absSize;
+
+        private Vector2 _absPos;
+
+        private Vector2 UsableSize => new Vector2(this._absSize.x - this.margins.x, this._absSize.y - this.margins.y);
+
+        #endregion
+
+        #region Unity serialized fields and properties
 
         [SerializeField]
         [Tooltip("Margins of the play field in which no actual fields will be generated.")]
@@ -29,22 +49,44 @@ namespace Scripts.GameObjects
         [Tooltip("The minimum gap between grid columns and rows.")]
         private float minGridGap = .125f;
 
-        private (int x, int y) _bounds;
+        [SerializeField]
+        [Tooltip("All supported types of pegs")]
+        private List<PegBase> pegTypes = new();
 
-        private Vector2 _absSize;
+        #endregion
 
-        private Vector2 _absPos;
-
-        private Vector2 UsableSize => new Vector2(this._absSize.x - this.margins.x, this._absSize.y - this.margins.y);
+        #region Unity messages
 
         void Awake()
         {
             this._absSize = this.gameObject.GetComponent<RectTransform>().rect.size;
             this._absPos = this.gameObject.GetComponent<RectTransform>().transform.position;
 
-            Debug.Log("Absolute Size: (" + this._absSize.x + ", " + this._absSize.y + ")");
-            Debug.Log("Absolute Position: (" + this._absPos.x + ", " + this._absPos.y + ")");
+            LogUtil.Log("Initialized Grid with Size: (" + this._absSize.x + ", " + this._absSize.y + ")");
+            LogUtil.Log("Initialized Grid with Position: (" + this._absPos.x + ", " + this._absPos.y + ")");
+
+            Game.Context.CurrentRound.StartRound += this.RestockGrid;
         }
+
+        private void RestockGrid(int roundNumber)
+        {
+            for (int x = 0; x < this._grid.Length; x++)
+            {
+                for (int y = 0; y < this._grid.Length; y++)
+                {
+                    // One-Based
+                    Vector2Int gridCellPosition = new(x + 1, y + 1);
+
+                    PegBase peg = this.GetPegTypeForCell(gridCellPosition);
+
+                    this._grid[x][y].PopulateWithPeg(peg);
+                }
+            }
+        }
+
+        #endregion
+
+        #region Public methods
 
         public GridCell GetGridCellAtPos(int x, int y)
         {
@@ -67,6 +109,10 @@ namespace Scripts.GameObjects
 
             return true;
         }
+
+        #endregion
+
+        #region Private methods
 
         private void PopulateBoundsFromEnumerable<T>(T[][] array)
         {
@@ -102,7 +148,7 @@ namespace Scripts.GameObjects
                 for (int iY = 0; iY < row.Length; iY++)
                 {
                     bool cellEnabled = pattern[iX][iY];
-                    GameObject cellObject = Instantiate(this.gridCellPrefab);
+                    GameObject cellObject = Instantiate(this.gridCellPrefab, this.gameObject.transform);
                     GridCell gridCell = cellObject.GetComponent<GridCell>();
                     if (!cellEnabled)
                     {
@@ -126,11 +172,6 @@ namespace Scripts.GameObjects
                     {
                         continue;
                     }
-
-                    Debug.DrawLine(cellTransform.position.Value - Vector2.one * 0.2f,
-                        cellTransform.position.Value + Vector2.one * 0.2f,
-                        Color.green,
-                        10f);
 
                     gridCell.UpdatePositionAndSize(cellTransform.position.Value, cellTransform.cellSize.Value);
 
@@ -176,9 +217,20 @@ namespace Scripts.GameObjects
             cellTransform.position = new Vector2(xPosLeftBorder + cellSize / 2, yPosTopBorder - cellSize / 2);
             cellTransform.cellSize = cellSize;
 
-            Debug.Log($"Cell in row {xInGrid}, col {yInGrid} Position: ({cellTransform.position.Value.x}, {cellTransform.position.Value.y}) Size: {cellTransform.cellSize}");
+            LogUtil.Log($"Cell in row {xInGrid}, col {yInGrid} Position: ({cellTransform.position.Value.x}, {cellTransform.position.Value.y}) Size: {cellTransform.cellSize}");
 
             return true;
         }
+
+        private PegBase GetPegTypeForCell(Vector2Int cell)
+        {
+            List<PegBase> pegTypesFiltered = this.pegTypes.Where(pt => pt.IsValidForCellInGrid(this._grid, cell)).ToList();
+
+            PegBase pegType = RandomUtil.GetRandomElementWeighted(pegTypesFiltered, pegTypesFiltered.Select(pt => (float)pt.Weight).ToList());
+
+            return pegType;
+        }
+
+        #endregion
     }
 }

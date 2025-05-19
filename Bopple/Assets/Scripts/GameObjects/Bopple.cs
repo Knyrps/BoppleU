@@ -32,7 +32,7 @@ namespace Scripts.GameObjects
         void OnDestroy()
         {
             BoppleLauncher.ActiveBopples.Remove(this);
-            Debug.Log($"Bopple #{this.instanceId} had a Lifetime of {StopwatchUtil.Stop("_Launch#" + this.instanceId)}ms.");
+            LogUtil.Log($"Bopple #{this.instanceId} had a Lifetime of {StopwatchUtil.Stop("_Launch#" + this.instanceId)}ms.");
 
             if (!BoppleLauncher.ActiveBopples.Any())
             {
@@ -71,7 +71,7 @@ namespace Scripts.GameObjects
 
             GameEvents.InRound.TriggerLaunch();
 
-            Debug.Log($"Bopple #{this.instanceId} launched with force: {force} in direction: {direction}. At time of launch, {BoppleLauncher.ActiveBopples.Count} Bopples were actively on screen.");
+            LogUtil.Log($"Bopple #{this.instanceId} launched with force: {force} in direction: {direction}. At time of launch, {BoppleLauncher.ActiveBopples.Count} Bopples were actively on screen.");
 
             StopwatchUtil.StartNew("_Launch#" + this.instanceId);
 
